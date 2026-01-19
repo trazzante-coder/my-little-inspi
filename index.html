@@ -118,28 +118,22 @@ visual:{
 c1:["Héros","Robot","Animal","Objet vivant","Créature","Pirate","Monstre","Machine","Alien","Gadget"],
 c2:["Médiéval","Futuriste","Post-apo","Cyberpunk","Fantastique","Forêt","Désert","Océan","Ville","Île"],
 c3:["Sombre","Épique","Calme","Poétique","Mystérieux","Drôle","Minimaliste","Coloré","Abstrait","Suspense"],
-c4:[
-"Rouge / Noir / Blanc",
-"Bleu / Blanc / Gris",
-"Vert / Jaune / Marron",
-"Violet / Rose / Bleu",
-"Noir / Or / Rouge",
-"Pastel / Beige / Blanc",
-"Fluo / Noir / Violet"
-],
-c5:["Crayon","Bic","Feutre","Marqueur","Stylet","Pinceau","Aquarelle"]
+c4:[["Rouge","Bleu","Vert"],["Violet","Noir","Blanc"],["Pastel","Fluo","Gris"],["Or"]],
+c5:["Crayon","Feutre","Bic","Pinceau","Marqueur","Pastel sec","Gouache","Stylo","Aquarelle","Encre"]
 },
 music:{
 c1:["Piano","Guitare","Batterie","Voix","Synthé","Basse","Harpe","Violoncelle","Flûte","Percussions"],
 c2:["Lent","Rapide","Jazz","Rock","Electro","Ambient","Classique","Funky","Groove","Épique"],
 c3:["Calme","Énergique","Mélancolique","Atmosphérique","Mystérieux","Inspirant","Sombre","Abstrait","Romantique","Futuriste"],
-c4:["Chaud","Froid","Clair","Sombre","Analogique","Numérique","Minimal","Dense","Brut","Doux"]
+c4:["Chaud","Froid","Clair","Sombre","Analogique","Numérique","Minimal","Dense","Brut","Doux"],
+c5:["Analogique","Numérique","Platines","Micro","Batterie","Guitare","Voix","Saxophone","Clavier","Flûte"]
 },
 writing:{
 c1:["Voyageur","Enfant","IA","Détective","Sorcier","Artisan","Gardien","Écrivain","Explorateur","Monstre"],
 c2:["Lieu abandonné","Ville","Forêt","Château","Planète","Laboratoire","Temple","Océan","Île","Manoir"],
 c3:["Mystère","Suspense","Poétique","Ironique","Drame","Aventure","Romantique","Fantastique","Absurde","Épique"],
-c4:["Sobre","Sombre","Lumineux","Minimaliste","Symbolique","Onirique","Brut","Doux","Contrasté","Neutre"]
+c4:["Sobre","Sombre","Lumineux","Minimaliste","Symbolique","Onirique","Brut","Doux","Contrasté","Neutre"],
+c5:["Stylos","Machines à écrire","Tablette","Clavier","Ordinateur","Carnet","Papier","Crayon","Feutre","Pinceau"]
 }
 };
 
@@ -164,29 +158,17 @@ spinSlot();
 
 // ===== SPIN =====
 function spinSlot(){
-let cols;
-
-if(currentMode==="visual"){
-cols=[
-data.visual.c1,
-data.visual.c2,
-data.visual.c3,
-data.visual.c4,
-data.visual.c5
-];
-}else{
-cols=[
+const cols=[
 data[currentMode].c1,
 data[currentMode].c2,
 data[currentMode].c3,
 data[currentMode].c4,
-data[currentMode].c4
+data[currentMode].c5
 ];
-}
 
 [3,4].forEach(i=>{
-document.getElementById("col"+(i+1))
-.classList.toggle("hidden",!document.getElementById("col"+(i+1)+"chk").checked);
+const colEl=document.getElementById("col"+(i+1));
+colEl.classList.toggle("hidden",!document.getElementById("col"+(i+1)+"chk").checked);
 });
 
 cols.forEach((arr,i)=>{
@@ -195,10 +177,16 @@ if(col.classList.contains("hidden")) return;
 
 let count=0;
 const interval=setInterval(()=>{
-let idx;
-do{idx=Math.floor(Math.random()*arr.length);}while(idx===lastIndexes[i]);
-lastIndexes[i]=idx;
-col.innerText=arr[idx];
+let value;
+if(currentMode==="visual" && i===3){ // colonne 4 dessin → 3 couleurs
+const set=arr[Math.floor(Math.random()*arr.length)];
+value=set.join(", ");
+value+=""; 
+}else{
+const idx=Math.floor(Math.random()*arr.length);
+value=arr[idx];
+}
+col.innerText=value;
 count++;
 if(count>20+i*5) clearInterval(interval);
 },120);
